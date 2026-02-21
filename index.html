@@ -48,13 +48,14 @@
   .screen.active { display: flex; }
 
   h1 {
-    font-size: 2.5rem;
+    /* 画面サイズに合わせて縮小するように変更 */
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
     margin-bottom: 2rem;
     color: #444;
   }
 
   .settings {
-    font-size: 1.8rem;
+    font-size: clamp(1.2rem, 5vw, 1.8rem);
     margin-bottom: 3rem;
     display: flex;
     flex-direction: column;
@@ -63,7 +64,7 @@
   label {
     cursor: pointer;
     background: #fff;
-    padding: 20px 40px;
+    padding: 15px 30px; /* スマホでも収まるように少し調整 */
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     border: 4px solid transparent;
@@ -74,8 +75,8 @@
   label:has(input[type="radio"]:checked) { border-color: #ff6b6b; }
 
   button {
-    font-size: 2rem;
-    padding: 20px 60px;
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    padding: 15px 40px;
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -91,24 +92,27 @@
     cursor: pointer;
     user-select: none;
     justify-content: center;
-    gap: 40px;
+    gap: 4vh; /* 縦幅に合わせて隙間を調整 */
   }
 
   .number-display {
     font-family: 'M PLUS Rounded 1c','Hiragino Maru Gothic ProN','Meiryo',sans-serif;
-    font-size: 18rem;
+    /* 画面幅に応じてフォントサイズを自動計算（最小8rem〜最大18rem） */
+    font-size: clamp(8rem, 45vw, 18rem);
     font-weight: 900;
-    color: #61d4e8; /* JSで上書き */
+    color: #61d4e8;
     line-height: 1;
-    -webkit-text-stroke: 8px #222;
-    text-stroke: 8px #222;
+    -webkit-text-stroke: 6px #222;
+    text-stroke: 6px #222;
     visibility: hidden;
   }
 
   .blocks-container {
     display: grid;
-    grid-template-columns: repeat(5, 75px);
-    grid-template-rows: repeat(2, 75px);
+    /* 枠を画面幅の90%（最大400px）にし、5等分してはみ出さないように変更 */
+    width: 90vw;
+    max-width: 400px;
+    grid-template-columns: repeat(5, 1fr);
     background-color: #222;
     gap: 2px;
     border: 3px solid #222;
@@ -120,12 +124,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    /* 縦横比を1:1（正方形）に保つ */
+    aspect-ratio: 1 / 1; 
   }
 
-  /* 丸の色は JS で数字と同じ色に上書きします */
   .circle {
-    width: 50px;
-    height: 50px;
+    /* マスのサイズに合わせて自動で大きさが変わるように変更 */
+    width: 65%;
+    height: 65%;
     background-color: #61d4e8;
     border-radius: 50%;
   }
@@ -133,7 +139,7 @@
   .instruction {
     position: absolute;
     bottom: 20px;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: #777;
     animation: blink 2s infinite;
   }
@@ -229,20 +235,20 @@
       const cell = document.createElement('div');
       cell.className = 'cell';
 
-      // 現在の数より小さければ、マスの中に丸を入れる（★丸も同じ色）
+      // 現在の数より小さければ、マスの中に丸を入れる
       if (i < currentNumber) {
         const circle = document.createElement('div');
         circle.className = 'circle';
-        circle.style.backgroundColor = color;   // ★数字と同じ色
+        circle.style.backgroundColor = color;
         cell.appendChild(circle);
       }
 
       blocksContainer.appendChild(cell);
     }
 
-    // 数字の準備（★数字も同じ色）
+    // 数字の準備
     numberDisplay.textContent = currentNumber;
-    numberDisplay.style.color = color;          // ★ブロックと同じ色
+    numberDisplay.style.color = color;
     numberDisplay.style.visibility = 'hidden';
     isShowingNumber = false;
   }
